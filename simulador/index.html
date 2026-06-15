@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TechSoluciones — Soporte Técnico N1</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F1923;
+  --surface:#1A2535;
+  --surface2:#243040;
+  --border:#2E3F55;
+  --accent:#1D9E75;
+  --accent2:#185FA5;
+  --warn:#E8B84B;
+  --danger:#D85A30;
+  --text:#D8E8F5;
+  --text2:#8AAFC8;
+  --bot-bubble:#1A2F45;
+  --user-bubble:#0D5C3A;
+  --radius:12px;
+  --font:'Segoe UI',system-ui,sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+.app{width:100%;max-width:520px;display:flex;flex-direction:column;gap:12px}
+header{display:flex;align-items:center;gap:12px;padding:16px 18px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border)}
+.logo{width:38px;height:38px;background:var(--accent2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.header-info h1{font-size:15px;font-weight:600;color:var(--text)}
+.header-info p{font-size:11px;color:var(--text2);margin-top:2px}
+.status-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;display:inline-block;margin-right:5px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.state-badge{margin-left:auto;font-size:10px;padding:3px 8px;border-radius:20px;background:var(--surface2);border:1px solid var(--border);color:var(--text2);white-space:nowrap}
+
+.chat-window{height:420px;overflow-y:auto;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:14px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}
+.chat-window::-webkit-scrollbar{width:4px}
+.chat-window::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.msg{max-width:82%;display:flex;flex-direction:column;gap:3px}
+.msg.bot{align-self:flex-start}
+.msg.user{align-self:flex-end}
+.bubble{padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.55}
+.msg.bot .bubble{background:var(--bot-bubble);border:1px solid var(--border);border-bottom-left-radius:3px}
+.msg.user .bubble{background:var(--user-bubble);border-bottom-right-radius:3px}
+.bubble.warn{border-left:3px solid var(--warn);background:#1E1A0D}
+.bubble.error{border-left:3px solid var(--danger);background:#1E0D0D}
+.bubble.success{border-left:3px solid var(--accent)}
+.sender{font-size:10px;color:var(--text2);padding:0 4px}
+.msg.user .sender{text-align:right}
+.typing{display:flex;gap:4px;align-items:center;padding:10px 13px;background:var(--bot-bubble);border-radius:12px;border-bottom-left-radius:3px;border:1px solid var(--border);width:fit-content}
+.typing span{width:6px;height:6px;background:var(--text2);border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+.quick-btns{display:flex;flex-wrap:wrap;gap:6px;padding:0 2px}
+.qbtn{background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;transition:all .18s}
+.qbtn:hover{background:var(--accent2);border-color:var(--accent2);color:white}
+
+.input-row{display:flex;gap:8px}
+#user-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .2s}
+#user-input:focus{border-color:var(--accent2)}
+#user-input::placeholder{color:var(--text2)}
+#send-btn{background:var(--accent2);border:none;border-radius:var(--radius);padding:10px 16px;color:white;font-size:18px;cursor:pointer;transition:background .18s;flex-shrink:0}
+#send-btn:hover{background:#1A73C0}
+
+.fsm-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+.fsm-title{font-size:11px;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.fsm-states{display:flex;flex-wrap:wrap;gap:5px}
+.fsm-item{font-size:10px;padding:3px 8px;border-radius:10px;border:1px solid var(--border);color:var(--text2);background:var(--surface2)}
+.fsm-item.active{background:var(--accent2);border-color:var(--accent2);color:white;font-weight:600}
+.fsm-item.done{background:#0D3320;border-color:var(--accent);color:#6EC99A}
+
+footer{font-size:10px;color:var(--text2);text-align:center}
+footer span{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">🛠</div>
+    <div class="header-info">
+      <h1><span class="status-dot"></span>TechSoluciones — Soporte N1</h1>
+      <p>Bot automatizado · Organización Empresarial UTN · TPI Francisco Cardenas</p>
+    </div>
+    <div class="state-badge" id="state-badge">INICIO</div>
+  </header>
+
+  <div class="chat-window" id="chat"></div>
+
+  <div class="quick-btns" id="quick-btns"></div>
+
+  <div class="input-row">
+    <input type="text" id="user-input" placeholder="Describí tu problema técnico..."/>
+    <button id="send-btn" title="Enviar">➤</button>
+  </div>
+
+  <div class="fsm-panel">
+    <div class="fsm-title">Máquina de estados (FSM)</div>
+    <div class="fsm-states" id="fsm-states"></div>
+  </div>
+
+  <footer>Simulador · TPI Organización Empresarial · <span>UTN TUPaD</span> · Comisión 16</footer>
+</div>
+
+<script>
+// ============================================================
+//  BASE DE DATOS SIMULADA
+// ============================================================
+const DB = [
+  { id:1, keywords:["internet","wifi","red","conexion","conectar","no entra","no carga","sin red","sin internet"],
+    categoria:"Red",
+    respuesta:"Probá estos pasos:\n1. Reiniciá el router (desenchufar 30 seg y volver a enchufar).\n2. Si tenés cable, verificá que esté bien conectado.\n3. En tu PC: Inicio → Configuración → Red e Internet → Solucionar problemas.\n¿Se resolvió el problema?" },
+  { id:2, keywords:["impresora","imprimir","imprime","no imprime","papel"],
+    categoria:"Hardware",
+    respuesta:"Para problemas de impresora:\n1. Verificá que la impresora esté encendida y conectada.\n2. Abrí la Cola de impresión y cancelá todos los trabajos pendientes.\n3. Reiniciá el servicio: Inicio → Servicios → Cola de impresión → Reiniciar.\n¿Se resolvió el problema?" },
+  { id:3, keywords:["pantalla","monitor","negro","no enciende","no prende","apagado"],
+    categoria:"Hardware",
+    respuesta:"Para pantalla negra o monitor sin imagen:\n1. Verificá que el cable HDMI/VGA esté bien conectado en ambos extremos.\n2. Probá con otro cable o puerto.\n3. Si el equipo prende pero la pantalla no, presioná Win+P y seleccioná 'Solo pantalla del PC'.\n¿Se resolvió el problema?" },
+  { id:4, keywords:["lento","tarda","cuelga","freezea","lenta","trabado"],
+    categoria:"Software",
+    respuesta:"Para PC lenta o que se cuelga:\n1. Presioná Ctrl+Shift+Esc → revisá si algún proceso consume mucho CPU/RAM.\n2. Ejecutá el Liberador de espacio en disco (cleanmgr).\n3. Reiniciá el equipo si no lo hiciste recientemente.\n¿Se resolvió el problema?" },
+  { id:5, keywords:["contrasena","contraseña","password","clave","olvide","no recuerdo","no puedo entrar"],
+    categoria:"Software",
+    respuesta:"Para problemas de contraseña:\n1. Usá la opción '¿Olvidaste tu contraseña?' en la pantalla de inicio.\n2. Si es contraseña de dominio, necesitamos que un administrador la resetee.\n3. Para Office/correo: accedé a portal.office.com → 'No puedo acceder a mi cuenta'.\n¿Se resolvió el problema?" },
+  { id:6, keywords:["correo","email","mail","outlook","no llegan","no manda","no envía"],
+    categoria:"Software",
+    respuesta:"Para problemas con el correo:\n1. Verificá tu conexión a internet (ver solución de Red).\n2. En Outlook: Archivo → Configuración de cuenta → Verificar que el servidor esté activo.\n3. Revisá la carpeta de Spam/No deseado.\n¿Se resolvió el problema?" },
+];
+
+// ============================================================
+//  TICKETS SIMULADOS
+// ============================================================
+let tickets = [];
+let ticketCounter = 1000;
+
+function crearTicket(descripcion, categoria) {
+  const t = {
+    id: ticketCounter++,
+    fecha: new Date().toLocaleString('es-AR'),
+    descripcion,
+    categoria: categoria || "Sin categorizar",
+    estado: "Abierto",
+    asignado: "Supervisor"
+  };
+  tickets.push(t);
+  return t;
+}
+
+// ============================================================
+//  FSM
+// ============================================================
+const STATES = [
+  "INICIO","ESPERANDO_CONSULTA","CLASIFICANDO",
+  "SOLUCION_ENVIADA","TICKET_CREADO","SUPERVISOR_REVISANDO",
+  "RESUELTO","DERIVADO_N2"
+];
+let fsmState = "INICIO";
+let currentSolution = null;
+let currentTicket = null;
+let awaitingConfirmation = false;
+let sessionId = Math.random().toString(36).slice(2,10).toUpperCase();
+
+function updateFSM(newState) {
+  const prev = fsmState;
+  fsmState = newState;
+  document.getElementById("state-badge").textContent = newState;
+  renderFSM(prev);
+}
+
+function renderFSM(prev) {
+  const el = document.getElementById("fsm-states");
+  const done = STATES.slice(0, STATES.indexOf(fsmState));
+  el.innerHTML = STATES.map(s => {
+    let cls = "fsm-item";
+    if (s === fsmState) cls += " active";
+    else if (done.includes(s)) cls += " done";
+    return `<span class="${cls}">${s}</span>`;
+  }).join("");
+}
+
+// ============================================================
+//  CHAT UI
+// ============================================================
+const chat = document.getElementById("chat");
+
+function addMessage(text, who, type="") {
+  const wrap = document.createElement("div");
+  wrap.className = `msg ${who}`;
+  const sender = document.createElement("div");
+  sender.className = "sender";
+  sender.textContent = who === "bot" ? "🤖 TechBot" : "👤 Vos";
+  const bubble = document.createElement("div");
+  bubble.className = `bubble ${type}`;
+  bubble.innerHTML = text.replace(/\n/g,"<br>");
+  wrap.appendChild(sender);
+  wrap.appendChild(bubble);
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function showTyping(cb, delay=900) {
+  const wrap = document.createElement("div");
+  wrap.className = "msg bot";
+  wrap.id = "typing-indicator";
+  const dot = document.createElement("div");
+  dot.className = "typing";
+  dot.innerHTML = "<span></span><span></span><span></span>";
+  wrap.appendChild(dot);
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+  setTimeout(() => {
+    const el = document.getElementById("typing-indicator");
+    if (el) el.remove();
+    cb();
+  }, delay);
+}
+
+function setQuickBtns(options) {
+  const el = document.getElementById("quick-btns");
+  el.innerHTML = "";
+  options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "qbtn";
+    btn.textContent = opt;
+    btn.onclick = () => handleInput(opt);
+    el.appendChild(btn);
+  });
+}
+
+function clearQuickBtns() {
+  document.getElementById("quick-btns").innerHTML = "";
+}
+
+// ============================================================
+//  CLASIFICADOR
+// ============================================================
+function clasificar(texto) {
+  const lower = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  for (const sol of DB) {
+    for (const kw of sol.keywords) {
+      if (lower.includes(kw)) return sol;
+    }
+  }
+  return null;
+}
+
+// ============================================================
+//  LÓGICA PRINCIPAL
+// ============================================================
+function handleInput(raw) {
+  const texto = raw.trim();
+  if (!texto) {
+    showTyping(() => addMessage("No recibí ningún mensaje. Por favor, describí tu problema con palabras.", "bot","warn"), 400);
+    return;
+  }
+  addMessage(texto, "user");
+  clearQuickBtns();
+  const lower = texto.toLowerCase();
+
+  // Reset / inicio
+  if (["/inicio","hola","buenas","inicio","/start","reiniciar"].some(w => lower.includes(w))) {
+    resetSession();
+    return;
+  }
+  // Estado del ticket
+  if (lower.includes("/estado")) {
+    showTicketStatus();
+    return;
+  }
+  // Cancelar
+  if (lower.includes("/cancelar") || lower.includes("cancelar")) {
+    showTyping(() => {
+      addMessage("Sesión cancelada. Podés escribir 'hola' para iniciar una nueva consulta.", "bot");
+      updateFSM("INICIO");
+      setQuickBtns(["Hola, necesito ayuda"]);
+    }, 600);
+    return;
+  }
+
+  // Confirmación de resolución
+  if (awaitingConfirmation) {
+    handleConfirmacion(lower);
+    return;
+  }
+
+  // Flujo principal según estado
+  if (fsmState === "INICIO" || fsmState === "ESPERANDO_CONSULTA") {
+    procesarConsulta(texto);
+  } else if (fsmState === "SUPERVISOR_REVISANDO") {
+    showTyping(() => addMessage("Tu caso ya está siendo revisado por un supervisor. Te contactaremos a la brevedad. Ticket #" + (currentTicket?.id || "—"), "bot","warn"), 600);
+  } else {
+    showTyping(() => {
+      addMessage("No entendí esa respuesta. Escribí <b>hola</b> para iniciar una nueva consulta.", "bot","warn");
+      setQuickBtns(["Hola, necesito ayuda"]);
+    }, 500);
+  }
+}
+
+function procesarConsulta(texto) {
+  // Validación: solo números
+  if (/^\d+$/.test(texto.trim())) {
+    showTyping(() => {
+      addMessage("Solo recibí números. Por favor describí tu problema con palabras.", "bot","warn");
+      setQuickBtns(["No tengo internet","Mi PC está lenta","Problemas con la impresora"]);
+    }, 600);
+    return;
+  }
+
+  updateFSM("CLASIFICANDO");
+  showTyping(() => {
+    const solucion = clasificar(texto);
+    if (solucion) {
+      // Camino feliz
+      currentSolution = solucion;
+      awaitingConfirmation = true;
+      updateFSM("SOLUCION_ENVIADA");
+      addMessage(`Encontré una solución para tu problema de <b>${solucion.categoria}</b>:\n\n${solucion.respuesta}`, "bot","success");
+      setQuickBtns(["Sí, se resolvió ✓","No, sigue el problema ✗"]);
+    } else {
+      // Escalar: Gateway 2 → No
+      const ticket = crearTicket(texto);
+      currentTicket = ticket;
+      updateFSM("TICKET_CREADO");
+      addMessage(`No encontré una solución automática para tu caso.\n\n📋 <b>Ticket #${ticket.id} creado</b>\nCategoría: Sin categorizar\nFecha: ${ticket.fecha}\nEstado: Abierto — asignado al Supervisor.`, "bot","warn");
+      showTyping(() => {
+        updateFSM("SUPERVISOR_REVISANDO");
+        addMessage("Un supervisor ya recibió tu ticket y se pondrá en contacto en los próximos 15 minutos. ¿Hay algo más que quieras agregar?", "bot");
+        setQuickBtns(["/estado ver ticket","Hola, nueva consulta"]);
+      }, 1400);
+    }
+  }, 1100);
+}
+
+function handleConfirmacion(lower) {
+  awaitingConfirmation = false;
+  if (["si","sí","yes","se resolvio","se resolvió","funciono","funcionó","listo","ok","dale"].some(w => lower.includes(w))) {
+    updateFSM("RESUELTO");
+    showTyping(() => {
+      addMessage("¡Perfecto! Me alegra que se haya resuelto. 🎉\n\nSe registró la resolución. Para iniciar otra consulta, escribí <b>hola</b>.", "bot","success");
+      setQuickBtns(["Hola, otra consulta"]);
+    }, 700);
+  } else if (["no","sigue","no funciono","no funcionó","no se resolvio","no se resolvió","igual","mismo"].some(w => lower.includes(w))) {
+    const ticket = crearTicket(currentSolution ? `Sin resolver: ${currentSolution.categoria}` : "Sin resolver", currentSolution?.categoria);
+    currentTicket = ticket;
+    updateFSM("TICKET_CREADO");
+    showTyping(() => {
+      addMessage(`Entendido, escalamos el caso.\n\n📋 <b>Ticket #${ticket.id} creado</b>\nProblema: ${currentSolution?.categoria || "Sin categorizar"}\nFecha: ${ticket.fecha}\nEstado: Abierto`, "bot","warn");
+      showTyping(() => {
+        updateFSM("SUPERVISOR_REVISANDO");
+        addMessage("Un supervisor revisará tu caso. Si el problema no puede resolverse a distancia, se coordinará una visita técnica. Ticket #" + ticket.id, "bot");
+        setQuickBtns(["/estado ver ticket","Nueva consulta"]);
+      }, 1200);
+    }, 900);
+  } else {
+    awaitingConfirmation = true;
+    showTyping(() => {
+      addMessage("Por favor respondé <b>Sí</b> o <b>No</b> para indicar si el problema se resolvió.", "bot","warn");
+      setQuickBtns(["Sí, se resolvió ✓","No, sigue el problema ✗"]);
+    }, 500);
+  }
+}
+
+function showTicketStatus() {
+  showTyping(() => {
+    if (tickets.length === 0) {
+      addMessage("No tenés tickets registrados en esta sesión.", "bot");
+    } else {
+      const last = tickets[tickets.length-1];
+      addMessage(`📋 <b>Último ticket:</b>\n#${last.id} — ${last.categoria}\n📅 ${last.fecha}\n🔵 Estado: ${last.estado}`, "bot");
+    }
+  }, 600);
+}
+
+function resetSession() {
+  awaitingConfirmation = false;
+  currentSolution = null;
+  currentTicket = null;
+  updateFSM("ESPERANDO_CONSULTA");
+  showTyping(() => {
+    addMessage("¡Hola! Soy el bot de soporte de <b>TechSoluciones</b>. 👋\n\nDescribí tu problema y buscaré una solución. Podés escribir libremente o usar los botones de abajo.", "bot");
+    setQuickBtns([
+      "No tengo internet",
+      "Mi PC está lenta",
+      "Problemas con la impresora",
+      "Pantalla negra",
+      "Olvidé mi contraseña",
+      "Problemas con el correo"
+    ]);
+  }, 700);
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+document.getElementById("send-btn").addEventListener("click", () => {
+  const val = document.getElementById("user-input").value;
+  document.getElementById("user-input").value = "";
+  handleInput(val);
+});
+document.getElementById("user-input").addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const val = e.target.value;
+    e.target.value = "";
+    handleInput(val);
+  }
+});
+
+renderFSM("");
+resetSession();
+</script>
+</body>
+</html>
