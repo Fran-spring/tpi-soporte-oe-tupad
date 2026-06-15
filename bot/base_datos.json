@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "categoria": "Red",
+    "keywords": [
+      "internet", "wifi", "red", "conexion", "sin red", "sin internet",
+      "no entra", "no carga", "conectar", "no navega", "no tiene red"
+    ],
+    "respuesta": "Probá estos pasos:\n1. Reiniciá el router (desenchufar 30 seg y volver a enchufar).\n2. Verificá que el cable esté bien conectado si usás cable.\n3. En Windows: Configuración → Red e Internet → Solucionar problemas.",
+    "efectividad": 0.82
+  },
+  {
+    "id": 2,
+    "categoria": "Hardware",
+    "keywords": [
+      "impresora", "imprimir", "no imprime", "papel", "toner",
+      "cola de impresion", "no imprime nada"
+    ],
+    "respuesta": "Para la impresora:\n1. Verificá que esté encendida y conectada al equipo.\n2. Abrí la Cola de impresión y cancelá todos los trabajos pendientes.\n3. Reiniciá el servicio: Inicio → Servicios → Cola de impresión → Reiniciar.",
+    "efectividad": 0.75
+  },
+  {
+    "id": 3,
+    "categoria": "Hardware",
+    "keywords": [
+      "pantalla", "monitor", "negro", "no enciende", "no prende",
+      "sin imagen", "pantalla negra", "no se ve nada"
+    ],
+    "respuesta": "Para pantalla negra o sin imagen:\n1. Verificá que el cable HDMI/VGA esté bien conectado en ambos extremos.\n2. Probá con otro cable o puerto disponible.\n3. Presioná Win+P y seleccioná 'Solo pantalla del PC'.",
+    "efectividad": 0.70
+  },
+  {
+    "id": 4,
+    "categoria": "Software",
+    "keywords": [
+      "lento", "tarda", "cuelga", "freezea", "lenta", "trabado",
+      "no responde", "se traba", "va lento", "tarda mucho"
+    ],
+    "respuesta": "Para PC lenta o que se cuelga:\n1. Presioná Ctrl+Shift+Esc → revisá si hay procesos con alto consumo de CPU o RAM.\n2. Ejecutá el Liberador de espacio en disco: Inicio → cleanmgr.\n3. Reiniciá el equipo si no lo hiciste recientemente.",
+    "efectividad": 0.68
+  },
+  {
+    "id": 5,
+    "categoria": "Software",
+    "keywords": [
+      "contrasena", "contraseña", "password", "clave", "olvide",
+      "no recuerdo", "no puedo entrar", "bloqueado", "acceso denegado"
+    ],
+    "respuesta": "Para recuperar contraseña:\n1. Usá la opción '¿Olvidaste tu contraseña?' en la pantalla de login.\n2. Si es cuenta de dominio corporativo, necesitás que un administrador la resetee.\n3. Para cuentas Microsoft/Office 365: portal.office.com → 'No puedo acceder a mi cuenta'.",
+    "efectividad": 0.79
+  },
+  {
+    "id": 6,
+    "categoria": "Software",
+    "keywords": [
+      "correo", "email", "mail", "outlook", "no llegan", "no manda",
+      "no envia", "no envía", "correos", "bandeja"
+    ],
+    "respuesta": "Para problemas con el correo electrónico:\n1. Verificá tu conexión a internet (ver solución de Red si es necesario).\n2. En Outlook: Archivo → Configuración de cuenta → Probar la configuración.\n3. Revisá la carpeta de Spam o Correo no deseado.",
+    "efectividad": 0.71
+  },
+  {
+    "id": 7,
+    "categoria": "Software",
+    "keywords": [
+      "actualizacion", "actualización", "update", "windows update",
+      "no actualiza", "error de actualización", "reinicia solo"
+    ],
+    "respuesta": "Para problemas con actualizaciones de Windows:\n1. Ejecutá el Solucionador de problemas de Windows Update: Configuración → Actualización → Solucionar problemas.\n2. Liberá espacio en disco (se necesitan al menos 10 GB libres).\n3. Si el equipo reinicia en loop, accedé al Modo Seguro y revertí la última actualización.",
+    "efectividad": 0.65
+  },
+  {
+    "id": 8,
+    "categoria": "Hardware",
+    "keywords": [
+      "usb", "pendrive", "no reconoce", "no detecta", "dispositivo",
+      "no aparece", "no lee el usb"
+    ],
+    "respuesta": "Para dispositivos USB no reconocidos:\n1. Probá conectar el USB en otro puerto.\n2. Abrí el Administrador de dispositivos y verificá si aparece con error.\n3. Desinstalá el controlador del USB problemático y volvé a conectarlo para reinstalarlo automáticamente.",
+    "efectividad": 0.73
+  }
+]
