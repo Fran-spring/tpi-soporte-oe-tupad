@@ -8,7 +8,7 @@
 ## Descripción del proyecto
 
 Trabajo Práctico Integrador de la materia Organización Empresarial.  
-Se modela el proceso de **Soporte Técnico Nivel 1** de la empresa ficticia *TechSoluciones S.R.L.* utilizando BPMN 2.0, y se automatiza mediante un chatbot simulado con Python.
+Se modela el proceso de **Soporte Técnico Nivel 1** de la empresa ficticia *TechSoluciones S.R.L.* utilizando BPMN 2.0, y se automatiza mediante un chatbot simulado en consola (Python).
 
 El bot implementa una **Máquina de Estados Finita (FSM)** que refleja fielmente el diagrama BPMN: clasifica problemas contra una base de datos de soluciones conocidas, resuelve automáticamente los casos conocidos y escala los demás al supervisor mediante un sistema de tickets.
 
@@ -22,21 +22,15 @@ tpi-soporte-oe-tupad/
 │   ├── chatbot.py              # Lógica principal del bot (FSM + clasificador)
 │   ├── clasificador.py         # Módulo de clasificación por keywords
 │   └── base_datos.json         # BD simulada de soluciones conocidas
-├── docs/
-│   ├── bpmn_soporte_n1.svg     # Diagrama BPMN exportado (alta resolución)
-│   └── ia_captures/            # Capturas de pantalla de consultas a IA
-├── simulador/
-│   └── index.html              # Chatbot simulado funcional en navegador
-├── scripts/
-│   └── demo.py                 # Script de demo con casos de prueba automáticos
 ├── README.md
-├── requirements.txt
 └── .gitignore
 ```
 
+El diagrama BPMN y las capturas de las consultas a IA se incluyen directamente en el documento PDF/Word de la entrega.
+
 ---
 
-## Cómo ejecutar el bot (consola)
+## Cómo ejecutar el bot
 
 ### Requisitos
 - Python 3.10 o superior
@@ -47,61 +41,33 @@ tpi-soporte-oe-tupad/
 git clone https://github.com/Fran-spring/tpi-soporte-oe-tupad.git
 cd tpi-soporte-oe-tupad
 
-# 2. Ejecutar el bot en modo consola
+# 2. Ejecutar el bot en consola
 python bot/chatbot.py
 ```
 
 ### Ejemplo de sesión
 ```
-Bot: ¡Hola! Soy el bot de Soporte Técnico N1 de TechSoluciones.
-     Describí tu problema y buscaré una solución para vos.
+Bot: Hola! Soy el bot de Soporte Tecnico N1 de TechSoluciones.
+     Describi tu problema y buscare una solucion.
 
 Vos: no tengo internet
 
-Bot: Encontré una solución para tu problema de Red:
-     1. Reiniciá el router (desenchufar 30 seg).
-     2. Verificá el cable si usás conexión por cable.
-     3. En Windows: Configuración → Red → Solucionar problemas.
-     ¿Se resolvió el problema? (Sí / No)
+Bot: Encontre una solucion para tu problema de Red:
+     1. Reinicia el router (desenchufar 30 seg).
+     2. Verifica el cable si usas conexion por cable.
+     3. En Windows: Configuracion -> Red -> Solucionar problemas.
+     Se resolvio el problema? (Si / No)
 
 Vos: si
 
-Bot: ¡Perfecto! Me alegra que se haya resuelto. ✓
+Bot: Perfecto! Me alegra que se haya resuelto.
 ```
-
----
-
-## Cómo ejecutar el simulador web
-
-No requiere servidor. Abrí directamente en el navegador:
-
-```bash
-# Opción 1: doble clic sobre el archivo
-simulador/index.html
-
-# Opción 2: desde terminal
-python -m http.server 8080
-# luego abrir http://localhost:8080/simulador/
-```
-
----
-
-## Cómo ejecutar los tests automáticos
-
-```bash
-python scripts/demo.py
-```
-
-Ejecuta 8 casos de prueba cubriendo el camino feliz, el camino infeliz y los errores de entrada.
 
 ---
 
 ## Diagrama BPMN
 
-El archivo `docs/bpmn_soporte_n1.svg` contiene el diagrama de proceso completo con:
-- **3 carriles:** Usuario · Bot/Sistema · Supervisor
-- **3 gateways XOR:** Clasificación · Solución encontrada · Problema resuelto
-- **Flujos AS-IS y TO-BE** documentados en el PDF del trabajo
+El diagrama de proceso completo (3 carriles, 3 gateways XOR, eventos de inicio/fin) se incluye como imagen en el documento de entrega (PDF/Word), sección "Modelado del Proceso".
 
 ---
 
@@ -117,29 +83,12 @@ INICIO → ESPERANDO_CONSULTA → CLASIFICANDO
 
 ---
 
-## Historial de commits (Conventional Commits)
+## Herramientas de IA utilizadas
 
-| ID | Mensaje | Etapa |
-|----|---------|-------|
-| TPI-1 | `feat: inicializar estructura del repositorio` | Inicialización |
-| TPI-2 | `feat: agregar base de datos de soluciones conocidas` | Datos |
-| TPI-3 | `feat: implementar FSM y lógica principal del bot` | Desarrollo |
-| TPI-4 | `feat: agregar clasificador con normalización de tildes` | Desarrollo |
-| TPI-5 | `feat: agregar simulador web con interfaz de chat` | Frontend |
-| TPI-6 | `feat: agregar script de demo y tests automáticos` | QA |
-| TPI-7 | `docs: agregar diagrama BPMN y capturas de IA` | Documentación |
-| TPI-8 | `docs: actualizar README con instrucciones de despliegue` | Documentación |
+Se utilizó **Claude (Anthropic)** como herramienta de apoyo durante el desarrollo, principalmente para validar el diagrama BPMN, revisar la lógica de la FSM y detectar errores en el clasificador. Las capturas de pantalla de las consultas se incluyen en el documento de entrega.
 
 ---
 
-## Herramientas de IA utilizadas
+## Licencia
 
-Se utilizó **Claude (Anthropic)** como herramienta de apoyo durante el desarrollo.  
-Las capturas de pantalla de las consultas realizadas se encuentran en `docs/ia_captures/`.
-
-| Etapa | Uso |
-|-------|-----|
-| Modelado BPMN | Validación de gateways y carriles |
-| Diccionario de datos | Base de entidades revisada y adaptada |
-| Lógica Python | Revisión de clasificador y FSM |
-| Robustez | Identificación de caminos infelices |
+Trabajo académico — UTN TUPaD 2026. No reutilizar sin autorización del autor.
