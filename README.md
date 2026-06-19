@@ -26,8 +26,6 @@ tpi-soporte-oe-tupad/
 └── .gitignore
 ```
 
-El diagrama BPMN y las capturas de las consultas a IA se incluyen directamente en el documento PDF/Word de la entrega.
-
 ---
 
 ## Cómo ejecutar el bot
@@ -85,10 +83,6 @@ INICIO → ESPERANDO_CONSULTA → CLASIFICANDO
 
 ## Herramientas de IA utilizadas
 
-Se utilizó **Claude (Anthropic)** como herramienta de apoyo durante el desarrollo, principalmente para validar el diagrama BPMN, revisar la lógica de la FSM y detectar errores en el clasificador. Las capturas de pantalla de las consultas se incluyen en el documento de entrega.
+Se utilizó **Claude (Anthropic)** como herramienta de apoyo durante el desarrollo, principalmente para validar el diagrama BPMN, revisar la lógica de la FSM y detectar errores en el clasificador.
 
 ---
-
-## Licencia
-
-Trabajo académico — UTN TUPaD 2026. No reutilizar sin autorización del autor.
